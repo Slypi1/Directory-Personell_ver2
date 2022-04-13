@@ -50,10 +50,10 @@ namespace Lesson7_Directory_Personell_ver2
         {
             Personell personell = new Personell();
 
-            int ID = 0;
+            int ID =1;
 
             if (File.Exists(Path))
-                ID = File.ReadAllLines(Path).Length + 1;
+                ID = File.ReadAllLines(Path).Length+1;
 
             Console.WriteLine($"ID: {ID}");
             personell.ID = Convert.ToInt32(ID);
@@ -99,15 +99,23 @@ namespace Lesson7_Directory_Personell_ver2
             else
             {
                 {
+                     
                     using (StreamReader sr = new StreamReader(Path))
                     {
 
 
                         while (!sr.EndOfStream)
                         {
-                            string[] str = sr.ReadLine().Split('#');
-
-                            Add(new Personell(Convert.ToInt32(str[0]), Convert.ToDateTime(str[1]), str[2], Convert.ToInt32(str[3]), Convert.ToInt32(str[4]), str[5], str[6]));
+                           
+                            
+                                
+                                
+                                    string[] str = sr.ReadLine().Split('#');
+                                     if (!(str[0]==""))
+                                      Add(new Personell(Convert.ToInt32(str[0]), Convert.ToDateTime(str[1]), str[2], Convert.ToInt32(str[3]), Convert.ToInt32(str[4]), str[5], str[6]));
+                                
+                            
+                            
                         }
                     }
                 }
@@ -163,8 +171,7 @@ namespace Lesson7_Directory_Personell_ver2
         /// <param name="Path"></param>
         public void DelPersonell(string Path)
         {
-            string temppath = @"temp";
-            bool deleted = false;
+            
 
 
             Console.WriteLine("Введите ID строки, которую нужно удалить");
@@ -172,26 +179,17 @@ namespace Lesson7_Directory_Personell_ver2
             int Idconsole = int.Parse(Console.ReadLine());
 
             string[] pred = File.ReadAllLines(@Path);
+            
             for (int i = 0; i < pred.Length; i++)
             {
-                string[] str = pred[i].Split('#');
-                if (!(Idconsole == this.personells[i].ID) || deleted)
-                {
-
-                    Add(new Personell(Convert.ToInt32(str[0]), Convert.ToDateTime ( str[1]), str[2], Convert.ToInt32(str[3]), Convert.ToInt32(str[4]), str[5], str[6]));
-                    Save(temppath);
-                }
-                else
-                {
-                    deleted = true;
-                    Console.WriteLine("Данные удалены");
-                }
-
+                
+                if (Idconsole == personells[i].ID)
+                         pred[i] =null;
+                    
             }
-            if (!deleted)
-                Console.WriteLine("Сотрудника с данным ID нет");
-            File.Delete(Path);
-            File.Move(temppath,Path);
+            File.WriteAllLines(Path, pred);
+            Console.WriteLine(" Данные удалены ");
+           
         }
         /// <summary>
         /// Измененния данных сотрудника по ID
