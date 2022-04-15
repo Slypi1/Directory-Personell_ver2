@@ -112,7 +112,7 @@ namespace Lesson7_Directory_Personell_ver2
 
 
                             string[] str = sr.ReadLine().Split('#');
-                            if (!(str[0] == ""))
+                           
                                 Add(new Personell(Convert.ToInt32(str[0]), Convert.ToDateTime(str[1]), str[2], Convert.ToInt32(str[3]), Convert.ToInt32(str[4]), str[5], str[6]));
                            
 
@@ -179,18 +179,35 @@ namespace Lesson7_Directory_Personell_ver2
             int Idconsole = int.Parse(Console.ReadLine());
 
             string[] pred = File.ReadAllLines(@Path);
+            string[] str = new string[index-1];
 
-            for (int i = 0; i < pred.Length; i++)
+
+
+            for (int i = 0; i <pred.Length-1; i++)
             {
 
-                if (Idconsole == personells[i].ID)
-                    pred[i] = null;
+                //string[] str = pred[i].Split('#');
+                if (!(Idconsole == personells[i].ID))
+                { //Add(new Personell(Convert.ToInt32(personells.ID), Convert.ToDateTime(str[1]), str[2], Convert.ToInt32(str[3]), Convert.ToInt32(str[4]), str[5], str[6]));
+                    str[i] = pred[i];
+                }
+                else
+                {
+                    str[i] = pred[i + 1];
+                 }
 
             }
-            File.WriteAllLines(Path, pred);
+
+             ///File.Delete(@Path);
+            
+            
+            File.WriteAllLines(Path,str);
             Console.WriteLine(" Данные удалены ");
 
         }
+            
+
+        
         /// <summary>
         /// Измененния данных сотрудника по ID
         /// </summary>
