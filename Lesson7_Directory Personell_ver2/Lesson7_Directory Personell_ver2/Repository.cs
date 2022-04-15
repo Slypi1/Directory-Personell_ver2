@@ -12,7 +12,7 @@ namespace Lesson7_Directory_Personell_ver2
         private Personell[] personells;//основной массив для хранения данных 
         private string path;//путь к файлу с данными 
         int index;//текуший элемент для добавления в файл
-        
+
 
         public Repository(string Path)
         {
@@ -50,19 +50,12 @@ namespace Lesson7_Directory_Personell_ver2
         {
             Personell personell = new Personell();
 
-            int ID =1;
-            
+            int ID = 1;
+
 
             if (File.Exists(Path))
-                ID = personells.Max(x => x.ID)+1;
-            //{
-            //    for (int i = 0; i < this.personells.Length; i++)
-            //    {
-            //        if(ID<personells[i].ID)
-
-            //              ID= personells.Max(x => x.ID);
-            //    }
-            //}
+                ID = personells.Max(x => x.ID) + 1;
+            
             Console.WriteLine($"ID: {ID}");
             personell.ID = Convert.ToInt32(ID);
 
@@ -89,7 +82,7 @@ namespace Lesson7_Directory_Personell_ver2
             Console.Write("\n Место рождение: ");
             personell.PlaceBirth = Console.ReadLine();
 
-            Add(new Personell(Convert.ToInt32(personell.ID),Convert.ToDateTime( personell.Date), personell.LastName, Convert.ToInt32(personell.Age), Convert.ToInt32(personell.Hieght), personell.DateBirt, personell.PlaceBirth));
+            Add(new Personell(Convert.ToInt32(personell.ID), Convert.ToDateTime(personell.Date), personell.LastName, Convert.ToInt32(personell.Age), Convert.ToInt32(personell.Hieght), personell.DateBirt, personell.PlaceBirth));
 
             Save(Path);
         }
@@ -107,23 +100,22 @@ namespace Lesson7_Directory_Personell_ver2
             else
             {
                 {
-                     
+
                     using (StreamReader sr = new StreamReader(Path))
                     {
 
 
                         while (!sr.EndOfStream)
                         {
+
+
+
+
+                            string[] str = sr.ReadLine().Split('#');
+                            if (!(str[0] == ""))
+                                Add(new Personell(Convert.ToInt32(str[0]), Convert.ToDateTime(str[1]), str[2], Convert.ToInt32(str[3]), Convert.ToInt32(str[4]), str[5], str[6]));
                            
-                            
-                                
-                                
-                                    string[] str = sr.ReadLine().Split('#');
-                                     if (!(str[0]==""))
-                                      Add(new Personell(Convert.ToInt32(str[0]), Convert.ToDateTime(str[1]), str[2], Convert.ToInt32(str[3]), Convert.ToInt32(str[4]), str[5], str[6]));
-                                
-                            
-                            
+
                         }
                     }
                 }
@@ -179,7 +171,7 @@ namespace Lesson7_Directory_Personell_ver2
         /// <param name="Path"></param>
         public void DelPersonell(string Path)
         {
-            
+
 
 
             Console.WriteLine("Введите ID строки, которую нужно удалить");
@@ -187,17 +179,17 @@ namespace Lesson7_Directory_Personell_ver2
             int Idconsole = int.Parse(Console.ReadLine());
 
             string[] pred = File.ReadAllLines(@Path);
-            
+
             for (int i = 0; i < pred.Length; i++)
             {
-                
+
                 if (Idconsole == personells[i].ID)
-                         pred[i] =null;
-                    
+                    pred[i] = null;
+
             }
             File.WriteAllLines(Path, pred);
             Console.WriteLine(" Данные удалены ");
-           
+
         }
         /// <summary>
         /// Измененния данных сотрудника по ID
@@ -211,10 +203,12 @@ namespace Lesson7_Directory_Personell_ver2
             Console.WriteLine("Введите ID сотрудника для изменения ");
             int Idconsole = int.Parse(Console.ReadLine());
             string[] pred = File.ReadAllLines(@Path);
-            for (int i = 0; i < pred.Length; i++)
+
+
+            for (int i = 0; i < personells.Length; i++)
             {
 
-                string[] str = pred[i].Split('#');
+
                 if (Idconsole == this.personells[i].ID)
                 {
                     Console.WriteLine($"Данная запись:{this.personells[i].Print()}");
@@ -225,55 +219,53 @@ namespace Lesson7_Directory_Personell_ver2
                         case "ф":
                             {
                                 Console.Write("Введите новое Ф.И.О: ");
-                                str[2] = Console.ReadLine();
-                                personells[i].LastName = str[2];
+                                personells[i].LastName = Console.ReadLine();
                             }
                             break;
                         case "в":
                             {
                                 Console.Write("Введите новый возраст: ");
-                                str[3] = Console.ReadLine();
-                                personells[i].Age = int.Parse(str[3]);
+                                personells[i].Age = int.Parse(Console.ReadLine());
                             }
                             break;
                         case "p":
                             {
                                 Console.Write("Введите новый рост: ");
-                                str[4] = Console.ReadLine();
-                                personells[i].Hieght = int.Parse(str[4]);
+                                personells[i].Hieght = int.Parse(Console.ReadLine());
                             }
                             break;
                         case "д":
                             {
                                 Console.Write("Введите новую дату рождения: ");
-                                str[5] = Console.ReadLine();
-                                personells[i].DateBirt = str[5];
+                                personells[i].DateBirt = Console.ReadLine();
                             }
                             break;
                         case "м":
                             {
                                 Console.WriteLine("Введите новое место рождение: ");
-                                str[6] = Console.ReadLine();
-                                personells[i].PlaceBirth = str[5];
+                                personells[i].PlaceBirth = Console.ReadLine();
                             }
                             break;
 
                         default: Console.Write("Вы ввели не существующую команду"); break;
                     }
-
-
-                    pred[i] = String.Format("{0}#{1}#{2}#{3}#{4}#{5}#{6}",
+                   
+                        
+                            pred[i] = String.Format("{0}#{1}#{2}#{3}#{4}#{5}#{6}",
                                     this.personells[i].ID,
                                     this.personells[i].Date,
                                     this.personells[i].LastName,
                                     this.personells[i].Age,
                                     this.personells[i].Hieght,
                                     this.personells[i].DateBirt,
-                                    this.personells[i].PlaceBirth);
+                                   this.personells[i].PlaceBirth);
+                    
                 }
 
-
             }
+    
+
+            
             File.WriteAllLines(Path, pred);
             Console.WriteLine(" Данные изменены ");
 
