@@ -51,10 +51,18 @@ namespace Lesson7_Directory_Personell_ver2
             Personell personell = new Personell();
 
             int ID =1;
+            
 
             if (File.Exists(Path))
-                ID = File.ReadAllLines(Path).Length+1;
+                ID = personells.Max(x => x.ID)+1;
+            //{
+            //    for (int i = 0; i < this.personells.Length; i++)
+            //    {
+            //        if(ID<personells[i].ID)
 
+            //              ID= personells.Max(x => x.ID);
+            //    }
+            //}
             Console.WriteLine($"ID: {ID}");
             personell.ID = Convert.ToInt32(ID);
 
@@ -197,22 +205,19 @@ namespace Lesson7_Directory_Personell_ver2
         /// <param name="Path"></param>
         public void RePersonell(string Path)
         {
-            string temppath = @"temp";
-            
+            //string temppath = @"temp";
+
 
             Console.WriteLine("Введите ID сотрудника для изменения ");
             int Idconsole = int.Parse(Console.ReadLine());
             string[] pred = File.ReadAllLines(@Path);
             for (int i = 0; i < pred.Length; i++)
             {
-              
-               string [] str = pred[i].Split('#');
-               if (Idconsole == this.personells[i].ID)
-               {
-                    Console.WriteLine($"Данная запись:{this.personells[i]}");
-                    str[0] = Convert.ToString(this.personells[i].ID);
-                    str[1] = DateTime.Now.ToString();
 
+                string[] str = pred[i].Split('#');
+                if (Idconsole == this.personells[i].ID)
+                {
+                    Console.WriteLine($"Данная запись:{this.personells[i].Print()}");
                     Console.WriteLine("Какиe данные изменить(введите соотвествующую букву: \n1.Ф.И.О[ф] \n2.Возраст[в] \n3.Рост[р] \n4.Дата рождение[д],\n5.Место рождение[м]");
                     string izm = Console.ReadLine();
                     switch (izm)
@@ -221,48 +226,58 @@ namespace Lesson7_Directory_Personell_ver2
                             {
                                 Console.Write("Введите новое Ф.И.О: ");
                                 str[2] = Console.ReadLine();
-                                    } break;
+                                personells[i].LastName = str[2];
+                            }
+                            break;
                         case "в":
                             {
                                 Console.Write("Введите новый возраст: ");
                                 str[3] = Console.ReadLine();
-                            } break;
+                                personells[i].Age = int.Parse(str[3]);
+                            }
+                            break;
                         case "p":
                             {
-                                Console.Write("Введите новый возраст: ");
-                                   str[4] = Console.ReadLine();
+                                Console.Write("Введите новый рост: ");
+                                str[4] = Console.ReadLine();
+                                personells[i].Hieght = int.Parse(str[4]);
                             }
                             break;
                         case "д":
                             {
                                 Console.Write("Введите новую дату рождения: ");
                                 str[5] = Console.ReadLine();
-                                    } break;
+                                personells[i].DateBirt = str[5];
+                            }
+                            break;
                         case "м":
                             {
                                 Console.WriteLine("Введите новое место рождение: ");
                                 str[6] = Console.ReadLine();
+                                personells[i].PlaceBirth = str[5];
                             }
                             break;
-                     
+
                         default: Console.Write("Вы ввели не существующую команду"); break;
                     }
-                            Add(new Personell(Convert.ToInt32(str[0]), Convert.ToDateTime( str[1]), str[2], Convert.ToInt32(str[3]), Convert.ToInt32(str[4]), str[5], str[6]));
-                            Save(temppath);
-                        }
-                        else
-                        {
-                             Add(new Personell(Convert.ToInt32(str[0]), Convert.ToDateTime( str[1]), str[2], Convert.ToInt32(str[3]), Convert.ToInt32(str[4]), str[5], str[6]));
-                             Save(temppath);
-                         }
 
-                 }
-                
-                 File.Delete(Path);
-                 File.Move(temppath,Path);
+
+                    pred[i] = String.Format("{0}#{1}#{2}#{3}#{4}#{5}#{6}",
+                                    this.personells[i].ID,
+                                    this.personells[i].Date,
+                                    this.personells[i].LastName,
+                                    this.personells[i].Age,
+                                    this.personells[i].Hieght,
+                                    this.personells[i].DateBirt,
+                                    this.personells[i].PlaceBirth);
+                }
 
 
             }
+            File.WriteAllLines(Path, pred);
+            Console.WriteLine(" Данные изменены ");
+
+        }
             /// <summary>
             /// Вывод в заданом диапозоне дат 
             /// </summary>            
